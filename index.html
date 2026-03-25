@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kaliber Autonomy — Built for the Trades</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230C0C0C'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia%2C serif' font-weight='700' font-size='48' fill='%23E8A020'%3EK%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #E8A020;
+    --gold-light: #F5B84A;
+    --gold-dim: rgba(232,160,32,0.12);
+    --dark: #0C0C0C;
+    --dark-2: #141414;
+    --dark-3: #1C1C1C;
+    --steel: #1A2840;
+    --white: #F4F0EA;
+    --muted: #888;
+    --border: rgba(255,255,255,0.07);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--dark); color: var(--white); font-family: 'Barlow', sans-serif; font-weight: 400; line-height: 1.6; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; height: 64px; background: rgba(12,12,12,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); transition: box-shadow 0.3s; }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.12em; color: var(--white); text-decoration: none; }
+  .nav-logo .k-big { color: var(--gold); }
+  .nav-logo .k-rest { color: var(--white); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-family: 'Barlow Condensed', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta { background: var(--gold) !important; color: #0C0C0C !important; padding: 0.5rem 1.3rem !important; border-radius: 2px; font-weight: 700 !important; }
+  .nav-cta:hover { background: var(--gold-light) !important; }
+
+  /* BANNER */
+  .top-banner { position: fixed; top: 64px; left: 0; right: 0; z-index: 99; background: var(--gold); padding: 0.45rem 5%; display: flex; align-items: center; justify-content: center; gap: 1rem; }
+  .top-banner p { font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dark); }
+  .top-banner a { font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dark); text-decoration: underline; white-space: nowrap; }
+
+  /* HERO */
+  #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 155px 5% 80px; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 55% 50% at 80% 50%, rgba(232,160,32,0.06) 0%, transparent 60%), linear-gradient(180deg, #0C0C0C 0%, #101010 100%); z-index: 0; }
+  .hero-bg::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 80px 80px; }
+
+  .hero-inner { position: relative; z-index: 1; max-width: 740px; }
+
+  .hero-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.75rem; opacity: 0; animation: fadeUp 0.6s 0.2s forwards; }
+  .hero-tag::before { content: ''; display: inline-block; width: 28px; height: 2px; background: var(--gold); }
+
+  h1.hero-headline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 7vw, 8rem); line-height: 0.92; letter-spacing: 0.02em; opacity: 0; animation: fadeUp 0.7s 0.35s forwards; }
+  h1.hero-headline em { font-style: normal; color: var(--gold); display: block; }
+
+  .hero-sub { font-size: 1rem; font-weight: 300; color: rgba(244,240,234,0.58); margin-top: 1.5rem; opacity: 0; animation: fadeUp 0.7s 0.5s forwards; line-height: 1.7; }
+
+  .hero-actions { display: flex; gap: 1rem; margin-top: 2rem; opacity: 0; animation: fadeUp 0.7s 0.65s forwards; flex-wrap: wrap; align-items: center; }
+  .hero-note { font-size: 0.78rem; color: rgba(244,240,234,0.28); opacity: 0; animation: fadeUp 0.6s 0.8s forwards; margin-top: 0.75rem; font-style: italic; }
+
+  /* WHY US — compact inline strip */
+  .hero-right { opacity: 0; animation: fadeUp 0.8s 0.9s forwards; margin-top: 2rem; }
+  .why-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(232,160,32,0.55); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+  .why-label::before { content: ''; display: inline-block; width: 16px; height: 1px; background: rgba(232,160,32,0.5); }
+  .why-blurb { font-size: 0.88rem; color: rgba(244,240,234,0.45); line-height: 1.75; max-width: 520px; border-left: 2px solid rgba(232,160,32,0.3); padding-left: 1rem; }
+
+  .btn-primary { background: var(--gold); color: var(--dark); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.88rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.9rem 2rem; border: none; border-radius: 2px; cursor: pointer; text-decoration: none; display: inline-block; transition: background 0.2s, transform 0.15s, box-shadow 0.2s; }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 36px rgba(232,160,32,0.28); }
+  .btn-ghost { background: transparent; color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 0.88rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.9rem 2rem; border: 1px solid rgba(255,255,255,0.18); border-radius: 2px; cursor: pointer; text-decoration: none; display: inline-block; transition: border-color 0.2s, color 0.2s; }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  .scroll-hint { position: absolute; bottom: 2rem; left: 5%; display: flex; align-items: center; gap: 0.6rem; font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); z-index: 1; opacity: 0; animation: fadeUp 0.6s 1s forwards; }
+  .scroll-line { width: 1px; height: 36px; background: linear-gradient(to bottom, var(--gold), transparent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  /* TICKER */
+  #ticker { padding: 16px 0; background: var(--steel); overflow: hidden; border-top: 1px solid rgba(232,160,32,0.2); border-bottom: 1px solid rgba(232,160,32,0.2); }
+  .ticker-track { display: flex; animation: ticker 22s linear infinite; white-space: nowrap; }
+  .ticker-item { font-family: 'Barlow Condensed', sans-serif; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(244,240,234,0.45); padding: 0 2.2rem; border-right: 1px solid rgba(255,255,255,0.07); flex-shrink: 0; }
+  .ticker-item span { color: var(--gold); margin-right: 0.4rem; }
+  @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* SHARED */
+  section { padding: 80px 5%; }
+  .tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+  .tag::before { content: ''; display: inline-block; width: 20px; height: 2px; background: var(--gold); }
+  h2.title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.2rem, 4.5vw, 4rem); line-height: 1; letter-spacing: 0.03em; margin-bottom: 0.75rem; }
+  h2.title span { color: var(--gold); }
+  .sub { font-size: 0.95rem; color: rgba(244,240,234,0.48); max-width: 480px; line-height: 1.7; }
+
+  /* PAIN STATS */
+  #pain { background: var(--dark-2); }
+  .pain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 3rem; }
+  .pain-card { background: var(--dark-2); padding: 2.5rem; transition: background 0.3s; }
+  .pain-card:hover { background: var(--dark-3); }
+  .pain-num { font-family: 'Bebas Neue', sans-serif; font-size: 3.8rem; color: var(--gold); line-height: 1; }
+  .pain-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin: 0.25rem 0 0.6rem; }
+  .pain-desc { font-size: 0.86rem; color: rgba(244,240,234,0.48); line-height: 1.6; }
+  .pain-source { font-size: 0.68rem; color: rgba(244,240,234,0.18); margin-top: 0.75rem; font-style: italic; }
+
+  /* SERVICES */
+  #services { background: var(--dark); }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 3rem; }
+  .svc-card { background: var(--dark-2); padding: 2rem; transition: background 0.25s; position: relative; overflow: hidden; }
+  .svc-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--gold); transform: scaleY(0); transform-origin: bottom; transition: transform 0.3s; }
+  .svc-card:hover { background: var(--dark-3); }
+  .svc-card:hover::before { transform: scaleY(1); }
+  .svc-card { position: relative; overflow: hidden; }
+  .svc-bg { position: absolute; inset: 0; opacity: 0.07; transition: opacity 0.3s; pointer-events: none; }
+  .svc-card:hover .svc-bg { opacity: 0.13; }
+  .svc-bg svg { width: 100%; height: 100%; }
+  .svc-content { position: relative; z-index: 1; }
+  .svc-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--white); margin-bottom: 0.4rem; }
+  .svc-desc { font-size: 0.84rem; color: rgba(244,240,234,0.48); line-height: 1.6; }
+
+  /* PROCESS */
+  #process { background: var(--dark-2); }
+  .process-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 3rem; }
+  .step { background: var(--dark-2); padding: 2.5rem; position: relative; transition: background 0.3s; }
+  .step:hover { background: var(--dark-3); }
+  .step-n { font-family: 'Bebas Neue', sans-serif; font-size: 5rem; line-height: 1; color: rgba(232,160,32,0.1); margin-bottom: 0.75rem; transition: color 0.3s; user-select: none; }
+  .step:hover .step-n { color: rgba(232,160,32,0.2); }
+  .step-t { font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--white); margin-bottom: 0.4rem; }
+  .step-t span { color: var(--gold); }
+  .step-d { font-size: 0.84rem; color: rgba(244,240,234,0.48); line-height: 1.6; }
+  .step-arr { position: absolute; top: 50%; right: -1px; transform: translate(50%, -50%); width: 26px; height: 26px; background: var(--dark-2); border: 1px solid rgba(232,160,32,0.35); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: var(--gold); z-index: 2; }
+  .step:last-child .step-arr { display: none; }
+
+  /* FOUNDING */
+  #founding { background: var(--dark); }
+  .founding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .perks { margin-top: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+  .perk { display: flex; gap: 1rem; align-items: flex-start; }
+  .perk-ico { width: 38px; height: 38px; flex-shrink: 0; background: var(--gold-dim); border: 1px solid rgba(232,160,32,0.18); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+  .perk-t { font-family: 'Barlow Condensed', sans-serif; font-size: 0.88rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--white); margin-bottom: 0.2rem; }
+  .perk-d { font-size: 0.82rem; color: rgba(244,240,234,0.44); line-height: 1.55; }
+  .offer-card { background: var(--dark-2); border: 1px solid rgba(232,160,32,0.22); padding: 2.5rem; position: relative; }
+  .offer-card::before { content: 'Founding Client Offer'; position: absolute; top: -1px; left: 2rem; background: var(--gold); color: var(--dark); font-family: 'Barlow Condensed', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.28rem 0.9rem; }
+  .offer-name { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--white); margin: 1.5rem 0 0.5rem; letter-spacing: 0.04em; }
+  .offer-divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
+  .offer-list { list-style: none; margin-bottom: 1.5rem; }
+  .offer-list li { font-size: 0.86rem; color: rgba(244,240,234,0.6); padding: 0.5rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 0.65rem; line-height: 1.35; }
+  .offer-list li::before { content: '→'; color: var(--gold); flex-shrink: 0; font-size: 0.78rem; margin-top: 0.05rem; }
+  .offer-note { font-size: 0.76rem; color: rgba(244,240,234,0.24); font-style: italic; margin-bottom: 1.25rem; line-height: 1.55; }
+
+  /* FAQ */
+  #faq { background: var(--dark-2); }
+  .faq-wrap { margin-top: 3rem; border-top: 1px solid var(--border); max-width: 780px; }
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-q { width: 100%; background: none; border: none; color: var(--white); font-family: 'Barlow', sans-serif; font-size: 0.95rem; font-weight: 500; text-align: left; padding: 1.25rem 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: color 0.2s; }
+  .faq-q:hover { color: var(--gold); }
+  .faq-ico { font-size: 1.1rem; color: var(--gold); flex-shrink: 0; transition: transform 0.3s; font-style: normal; }
+  .faq-a { font-size: 0.88rem; color: rgba(244,240,234,0.48); line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; }
+  .faq-item.open .faq-a { max-height: 200px; padding-bottom: 1.25rem; }
+  .faq-item.open .faq-ico { transform: rotate(45deg); }
+
+  /* FINAL CTA */
+  #cta { background: var(--gold); padding: 90px 5%; text-align: center; position: relative; overflow: hidden; }
+  #cta::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 60px 60px; }
+  .cta-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(12,12,12,0.45); margin-bottom: 1.25rem; position: relative; z-index: 1; }
+  h2.cta-h { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.8rem, 7vw, 6.5rem); color: var(--dark); line-height: 0.95; letter-spacing: 0.02em; position: relative; z-index: 1; margin-bottom: 1.5rem; }
+  .cta-sub { font-size: 0.95rem; color: rgba(12,12,12,0.58); max-width: 480px; margin: 0 auto 2.5rem; line-height: 1.7; position: relative; z-index: 1; }
+  .cta-btn { display: inline-block; background: var(--dark); color: var(--gold); font-family: 'Barlow Condensed', sans-serif; font-size: 0.92rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 1rem 2.6rem; text-decoration: none; border-radius: 2px; transition: background 0.2s, transform 0.15s; position: relative; z-index: 1; }
+  .cta-btn:hover { background: #1a1a1a; transform: translateY(-2px); }
+  .cta-footnote { font-size: 0.76rem; color: rgba(12,12,12,0.36); margin-top: 1rem; position: relative; z-index: 1; font-style: italic; }
+
+  /* FOOTER */
+  footer { background: #080808; padding: 2rem 5%; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .f-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.12em; color: var(--muted); text-decoration: none; }
+  .f-logo .k-big { color: var(--gold); }
+  .f-logo .k-rest { color: var(--muted); }
+  .f-copy { font-size: 0.76rem; color: rgba(244,240,234,0.18); }
+  .f-contact { display: flex; align-items: center; }
+  .f-phone { font-family: 'Barlow Condensed', sans-serif; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; color: var(--gold); text-decoration: none; transition: color 0.2s; }
+  .f-phone:hover { color: var(--gold-light); }
+  .f-links a { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(244,240,234,0.25); text-decoration: none; transition: color 0.2s; }
+  .f-links a:hover { color: var(--gold); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 1; transform: none; transition: opacity 0.65s ease, transform 0.65s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .pain-grid { grid-template-columns: 1fr 1fr; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .founding-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .why-grid { flex-wrap: wrap; }
+    .why-card { flex: 1 1 45%; }
+  }
+  @media (max-width: 700px) {
+    .nav-links { display: none; }
+    .process-row { grid-template-columns: 1fr; }
+    .step-arr { display: none !important; }
+    .pain-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .top-banner { flex-direction: column; gap: 0.2rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo"><span class="k-big">K</span><span class="k-rest">aliber Autonomy</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#founding">Founding Offer</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSdVHVOLAKsEzdLh5QrPwCC4w-0o2Q5RCoFRVSRjNqaLxFfyzw/viewform?usp=publish-editor" target="_blank" class="nav-cta">Register</a></li>
+  </ul>
+</nav>
+
+<!-- BANNER -->
+<div class="top-banner">
+  <p>🚀 Coming Soon — Register now to lock in founding client rates</p>
+  <a href="#cta">Get Early Access →</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-tag">Automation for the Trades</div>
+      <h1 class="hero-headline">
+        Stop Burning Time<br>
+        <em>on Busy Work.</em>
+      </h1>
+      <p class="hero-sub">We build custom automation systems for HVAC, plumbing, electrical, and construction companies. We're launching soon — and we're looking for our founding clients.</p>
+      <div class="hero-actions">
+        <a href="#cta" class="btn-primary">Register Your Interest</a>
+        <a href="#services" class="btn-ghost">See What We Build</a>
+      </div>
+      <p class="hero-note">Early registrants lock in discounted founding rates.</p>
+    </div>
+    <div class="hero-right">
+      <div class="why-label">Why Choose Us</div>
+      <p class="why-blurb">We're not asking you to take a leap of faith — we start by mapping your workflows and showing you exactly what we'd build and why. You can judge our thinking before spending a dollar. Our founding client pricing reflects the reality that we're new, and you're getting significant value in exchange for being willing to work with us early.</p>
+    </div>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div> Scroll</div>
+</section>
+
+<!-- TICKER -->
+<div id="ticker">
+  <div class="ticker-track">
+    <div class="ticker-item"><span>❄️</span>HVAC</div>
+    <div class="ticker-item"><span>🔧</span>Plumbing</div>
+    <div class="ticker-item"><span>⚡</span>Electrical</div>
+    <div class="ticker-item"><span>🏗️</span>Construction</div>
+    <div class="ticker-item"><span>🔩</span>General Contracting</div>
+    <div class="ticker-item"><span>🪟</span>Roofing</div>
+    <div class="ticker-item"><span>🏠</span>Home Services</div>
+    <div class="ticker-item"><span>🛠️</span>Renovation</div>
+    <div class="ticker-item"><span>❄️</span>HVAC</div>
+    <div class="ticker-item"><span>🔧</span>Plumbing</div>
+    <div class="ticker-item"><span>⚡</span>Electrical</div>
+    <div class="ticker-item"><span>🏗️</span>Construction</div>
+    <div class="ticker-item"><span>🔩</span>General Contracting</div>
+    <div class="ticker-item"><span>🪟</span>Roofing</div>
+    <div class="ticker-item"><span>🏠</span>Home Services</div>
+    <div class="ticker-item"><span>🛠️</span>Renovation</div>
+  </div>
+</div>
+
+<!-- PAIN -->
+<section id="pain">
+  <div class="reveal">
+    <div class="tag">The Problem</div>
+    <h2 class="title">Your business is <span>bleeding time</span> and money</h2>
+  </div>
+  <div class="pain-grid reveal">
+    <div class="pain-card">
+      <div class="pain-num">20+</div>
+      <div class="pain-label">Hours lost per week</div>
+      <div class="pain-desc">The average small trades business spends 20+ hrs/week on admin that could be fully automated.</div>
+      <div class="pain-source">SMB operations research</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-num">50%</div>
+      <div class="pain-label">Leads go to first responder</div>
+      <div class="pain-desc">Half of all leads go to the company that responds first. Slow follow-ups are costing you jobs.</div>
+      <div class="pain-source">Harvard Business Review</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-num">10–15%</div>
+      <div class="pain-label">Revenue lost to inefficiency</div>
+      <div class="pain-desc">Bad processes quietly drain revenue every year — not from bad work, but from poor workflow management.</div>
+      <div class="pain-source">McKinsey SMB benchmarks</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="reveal">
+    <div class="tag">What We Build</div>
+    <h2 class="title">Everything <span>custom.</span> Nothing off the shelf.</h2>
+  </div>
+  <div class="services-grid reveal">
+
+    <!-- Workflow Automation — Make.com style flow -->
+    <div class="svc-card">
+      <div class="svc-bg"><svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <circle cx="30" cy="100" r="18" fill="none" stroke="#E8A020" stroke-width="2"/>
+        <circle cx="30" cy="100" r="8" fill="#E8A020"/>
+        <line x1="48" y1="100" x2="87" y2="100" stroke="#E8A020" stroke-width="1.5" stroke-dasharray="4 2"/>
+        <rect x="87" y="82" width="36" height="36" rx="6" fill="none" stroke="#E8A020" stroke-width="2"/>
+        <text x="105" y="104" text-anchor="middle" fill="#E8A020" font-size="10" font-family="monospace">⚙</text>
+        <line x1="123" y1="100" x2="162" y2="70" stroke="#E8A020" stroke-width="1.5" stroke-dasharray="4 2"/>
+        <line x1="123" y1="100" x2="162" y2="130" stroke="#E8A020" stroke-width="1.5" stroke-dasharray="4 2"/>
+        <rect x="162" y="52" width="36" height="36" rx="6" fill="none" stroke="#E8A020" stroke-width="2"/>
+        <text x="180" y="74" text-anchor="middle" fill="#E8A020" font-size="9" font-family="monospace">✓</text>
+        <rect x="162" y="112" width="36" height="36" rx="6" fill="none" stroke="#E8A020" stroke-width="2"/>
+        <text x="180" y="134" text-anchor="middle" fill="#E8A020" font-size="9" font-family="monospace">✗</text>
+        <line x1="198" y1="70" x2="237" y2="100" stroke="#E8A020" stroke-width="1.5" stroke-dasharray="4 2"/>
+        <line x1="198" y1="130" x2="237" y2="100" stroke="#E8A020" stroke-width="1.5" stroke-dasharray="4 2"/>
+        <circle cx="250" cy="100" r="13" fill="none" stroke="#E8A020" stroke-width="2"/>
+        <text x="250" y="104" text-anchor="middle" fill="#E8A020" font-size="9" font-family="monospace">END</text>
+      </svg></div>
+      <div class="svc-content">
+        <div class="svc-title">Workflow Automation</div>
+        <div class="svc-desc">Automate your daily repetitive tasks — scheduling, data entry, status updates, notifications.</div>
+      </div>
+    </div>
+
+    <!-- Lead Generation — Funnel -->
+    <div class="svc-card">
+      <div class="svc-bg"><svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <polygon points="40,30 260,30 210,80 90,80" fill="none" stroke="#E8A020" stroke-width="2"/>
+        <polygon points="90,85 210,85 185,125 115,125" fill="none" stroke="#E8A020" stroke-width="2"/>
+        <polygon points="115,130 185,130 168,165 132,165" fill="none" stroke="#E8A020" stroke-width="2"/>
+        <text x="150" y="58" text-anchor="middle" fill="#E8A020" font-size="9" font-family="monospace" letter-spacing="1">INBOUND LEADS</text>
+        <text x="150" y="108" text-anchor="middle" fill="#E8A020" font-size="9" font-family="monospace" letter-spacing="1">QUALIFIED</text>
+        <text x="150" y="152" text-anchor="middle" fill="#E8A020" font-size="8" font-family="monospace" letter-spacing="1">BOOKED</text>
+        <line x1="150" y1="170" x2="150" y2="185" stroke="#E8A020" stroke-width="1.5"/>
+        <circle cx="150" cy="190" r="5" fill="#E8A020"/>
+      </svg></div>
+      <div class="svc-content">
+        <div class="svc-title">Lead Generation Systems</div>
+        <div class="svc-desc">Capture, qualify, and follow up with leads automatically — 24/7, with instant response times.</div>
+      </div>
+    </div>
+
+    <!-- AI Chatbot — Terminal TUI -->
+    <div class="svc-card">
+      <div class="svc-bg"><svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect x="20" y="20" width="260" height="160" rx="4" fill="none" stroke="#E8A020" stroke-width="1.5"/>
+        <rect x="20" y="20" width="260" height="22" rx="4" fill="#E8A020" fill-opacity="0.15"/>
+        <circle cx="36" cy="31" r="4" fill="#E8A020" fill-opacity="0.5"/>
+        <circle cx="50" cy="31" r="4" fill="#E8A020" fill-opacity="0.5"/>
+        <circle cx="64" cy="31" r="4" fill="#E8A020" fill-opacity="0.5"/>
+        <text x="35" y="58" fill="#E8A020" font-size="8" font-family="monospace">USER: Book a furnace inspection</text>
+        <text x="35" y="74" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.6">AI: Sure! What date works for you?</text>
+        <text x="35" y="90" fill="#E8A020" font-size="8" font-family="monospace">USER: Tuesday afternoon</text>
+        <text x="35" y="106" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.6">AI: Confirmed for Tue 2pm. You'll</text>
+        <text x="35" y="118" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.6">     receive a reminder 1hr before.</text>
+        <text x="35" y="140" fill="#E8A020" font-size="8" font-family="monospace">USER: Perfect, thanks</text>
+        <text x="35" y="156" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.6">AI: Anytime! ▋</text>
+      </svg></div>
+      <div class="svc-content">
+        <div class="svc-title">Custom AI Chatbots</div>
+        <div class="svc-desc">An AI that books appointments, answers questions, and captures leads at any hour.</div>
+      </div>
+    </div>
+
+    <!-- CRM Automation — Database table -->
+    <div class="svc-card">
+      <div class="svc-bg"><svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect x="20" y="25" width="260" height="22" rx="2" fill="#E8A020" fill-opacity="0.2"/>
+        <text x="35" y="40" fill="#E8A020" font-size="8" font-family="monospace" font-weight="bold">NAME</text>
+        <text x="105" y="40" fill="#E8A020" font-size="8" font-family="monospace" font-weight="bold">STATUS</text>
+        <text x="175" y="40" fill="#E8A020" font-size="8" font-family="monospace" font-weight="bold">LAST CONTACT</text>
+        <line x1="20" y1="47" x2="280" y2="47" stroke="#E8A020" stroke-width="0.5" stroke-opacity="0.4"/>
+        <text x="35" y="62" fill="#E8A020" font-size="8" font-family="monospace">J. Morrison</text>
+        <text x="105" y="62" fill="#E8A020" font-size="8" font-family="monospace">✓ Booked</text>
+        <text x="175" y="62" fill="#E8A020" font-size="8" font-family="monospace">Today 9:14am</text>
+        <line x1="20" y1="68" x2="280" y2="68" stroke="#E8A020" stroke-width="0.5" stroke-opacity="0.2"/>
+        <text x="35" y="83" fill="#E8A020" font-size="8" font-family="monospace">T. Okafor</text>
+        <text x="105" y="83" fill="#E8A020" font-size="8" font-family="monospace">⟳ Follow-up</text>
+        <text x="175" y="83" fill="#E8A020" font-size="8" font-family="monospace">Yesterday</text>
+        <line x1="20" y1="89" x2="280" y2="89" stroke="#E8A020" stroke-width="0.5" stroke-opacity="0.2"/>
+        <text x="35" y="104" fill="#E8A020" font-size="8" font-family="monospace">R. Patel</text>
+        <text x="105" y="104" fill="#E8A020" font-size="8" font-family="monospace">◎ New Lead</text>
+        <text x="175" y="104" fill="#E8A020" font-size="8" font-family="monospace">Auto-logged</text>
+        <line x1="20" y1="110" x2="280" y2="110" stroke="#E8A020" stroke-width="0.5" stroke-opacity="0.2"/>
+        <text x="35" y="125" fill="#E8A020" font-size="8" font-family="monospace">S. Tremblay</text>
+        <text x="105" y="125" fill="#E8A020" font-size="8" font-family="monospace">✓ Invoiced</text>
+        <text x="175" y="125" fill="#E8A020" font-size="8" font-family="monospace">Mar 22</text>
+        <line x1="20" y1="131" x2="280" y2="131" stroke="#E8A020" stroke-width="0.5" stroke-opacity="0.2"/>
+        <text x="35" y="146" fill="#E8A020" font-size="8" font-family="monospace">D. Chen</text>
+        <text x="105" y="146" fill="#E8A020" font-size="8" font-family="monospace">⟳ Follow-up</text>
+        <text x="175" y="146" fill="#E8A020" font-size="8" font-family="monospace">Auto-logged</text>
+      </svg></div>
+      <div class="svc-content">
+        <div class="svc-title">CRM Automation</div>
+        <div class="svc-desc">Every customer interaction logged and every follow-up triggered — automatically.</div>
+      </div>
+    </div>
+
+    <!-- Social Media — Scheduling calendar -->
+    <div class="svc-card">
+      <div class="svc-bg"><svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect x="20" y="20" width="260" height="160" rx="4" fill="none" stroke="#E8A020" stroke-width="1.5"/>
+        <rect x="20" y="20" width="260" height="28" rx="4" fill="#E8A020" fill-opacity="0.15"/>
+        <text x="150" y="38" text-anchor="middle" fill="#E8A020" font-size="9" font-family="monospace" font-weight="bold" letter-spacing="2">MARCH 2026</text>
+        <text x="42" y="62" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.5">M</text>
+        <text x="79" y="62" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.5">T</text>
+        <text x="116" y="62" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.5">W</text>
+        <text x="153" y="62" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.5">T</text>
+        <text x="190" y="62" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.5">F</text>
+        <text x="227" y="62" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.5">S</text>
+        <rect x="30" y="68" width="28" height="22" rx="2" fill="#E8A020" fill-opacity="0.25" stroke="#E8A020" stroke-width="1"/>
+        <text x="44" y="83" text-anchor="middle" fill="#E8A020" font-size="7" font-family="monospace">POST</text>
+        <rect x="104" y="68" width="28" height="22" rx="2" fill="#E8A020" fill-opacity="0.12"/>
+        <text x="118" y="83" text-anchor="middle" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.4">—</text>
+        <rect x="178" y="68" width="28" height="22" rx="2" fill="#E8A020" fill-opacity="0.25" stroke="#E8A020" stroke-width="1"/>
+        <text x="192" y="83" text-anchor="middle" fill="#E8A020" font-size="7" font-family="monospace">POST</text>
+        <rect x="30" y="96" width="28" height="22" rx="2" fill="#E8A020" fill-opacity="0.12"/>
+        <rect x="67" y="96" width="28" height="22" rx="2" fill="#E8A020" fill-opacity="0.25" stroke="#E8A020" stroke-width="1"/>
+        <text x="81" y="111" text-anchor="middle" fill="#E8A020" font-size="7" font-family="monospace">POST</text>
+        <rect x="141" y="96" width="28" height="22" rx="2" fill="#E8A020" fill-opacity="0.12"/>
+        <rect x="215" y="96" width="28" height="22" rx="2" fill="#E8A020" fill-opacity="0.25" stroke="#E8A020" stroke-width="1"/>
+        <text x="229" y="111" text-anchor="middle" fill="#E8A020" font-size="7" font-family="monospace">POST</text>
+        <rect x="30" y="124" width="28" height="22" rx="2" fill="#E8A020" fill-opacity="0.25" stroke="#E8A020" stroke-width="1"/>
+        <text x="44" y="139" text-anchor="middle" fill="#E8A020" font-size="7" font-family="monospace">POST</text>
+        <rect x="104" y="124" width="28" height="22" rx="2" fill="#E8A020" fill-opacity="0.12"/>
+        <rect x="178" y="124" width="28" height="22" rx="2" fill="#E8A020" fill-opacity="0.25" stroke="#E8A020" stroke-width="1"/>
+        <text x="192" y="139" text-anchor="middle" fill="#E8A020" font-size="7" font-family="monospace">POST</text>
+      </svg></div>
+      <div class="svc-content">
+        <div class="svc-title">Social Media Automation</div>
+        <div class="svc-desc">Consistent posts, review requests, and lead capture from social — without lifting a finger.</div>
+      </div>
+    </div>
+
+    <!-- Custom Build — Code editor -->
+    <div class="svc-card">
+      <div class="svc-bg"><svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect x="20" y="20" width="260" height="160" rx="4" fill="none" stroke="#E8A020" stroke-width="1.5"/>
+        <rect x="20" y="20" width="260" height="20" rx="4" fill="#E8A020" fill-opacity="0.15"/>
+        <text x="150" y="34" text-anchor="middle" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.7">custom_build.js</text>
+        <text x="35" y="56" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.4">1</text>
+        <text x="50" y="56" fill="#E8A020" font-size="8" font-family="monospace">function <tspan fill-opacity="0.9">automate</tspan>(business) {</text>
+        <text x="35" y="70" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.4">2</text>
+        <text x="50" y="70" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.6">  const pain = audit(business);</text>
+        <text x="35" y="84" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.4">3</text>
+        <text x="50" y="84" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.6">  const system = build(pain);</text>
+        <text x="35" y="98" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.4">4</text>
+        <text x="50" y="98" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.6">  deploy(system);</text>
+        <text x="35" y="112" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.4">5</text>
+        <text x="50" y="112" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.6">  support(system, <tspan fill="#E8A020">'forever'</tspan>);</text>
+        <text x="35" y="126" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.4">6</text>
+        <text x="50" y="126" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.6">  return results;</text>
+        <text x="35" y="140" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.4">7</text>
+        <text x="50" y="140" fill="#E8A020" font-size="8" font-family="monospace">}</text>
+        <text x="35" y="158" fill="#E8A020" font-size="8" font-family="monospace" fill-opacity="0.4">▋</text>
+      </svg></div>
+      <div class="svc-content">
+        <div class="svc-title">Custom Build</div>
+        <div class="svc-desc">Have a specific problem? We scope and build from scratch. If it can be automated, we'll build it.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="reveal">
+    <div class="tag">How It Works</div>
+    <h2 class="title">Three steps. <span>No fluff.</span></h2>
+  </div>
+  <div class="process-row reveal">
+    <div class="step">
+      <div class="step-n">01</div>
+      <div class="step-t"><span>Audit</span> & Analyze</div>
+      <div class="step-d">We map your workflows, find the biggest time sinks, and identify exactly what to automate first.</div>
+      <div class="step-arr">→</div>
+    </div>
+    <div class="step">
+      <div class="step-n">02</div>
+      <div class="step-t"><span>Build</span> & Implement</div>
+      <div class="step-d">We build a custom system around your exact operation — integrated with your existing tools, fully tested.</div>
+      <div class="step-arr">→</div>
+    </div>
+    <div class="step">
+      <div class="step-n">03</div>
+      <div class="step-t"><span>Refine</span> & Support</div>
+      <div class="step-d">We monitor, adjust, and support your system after launch. You're not on your own once it's live.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDING -->
+<section id="founding">
+  <div class="founding-grid">
+    <div class="reveal">
+      <div class="tag">Founding Client Offer</div>
+      <h2 class="title">We're new.<br>That's your <span>advantage.</span></h2>
+      <p class="sub" style="margin-bottom:0;">We're launching Kaliber and taking on a small group of founding clients — people who get discounted rates, direct founder access, and our full attention. In exchange, we ask for honest feedback and the chance to earn a testimonial.</p>
+      <div class="perks">
+        <div class="perk">
+          <div class="perk-ico">💰</div>
+          <div><div class="perk-t">Discounted Founding Rate</div><div class="perk-d">Locked in for life. Prices won't increase as we grow.</div></div>
+        </div>
+        <div class="perk">
+          <div class="perk-ico">🎯</div>
+          <div><div class="perk-t">White-Glove Build</div><div class="perk-d">You'll get more of our attention than any future client will.</div></div>
+        </div>
+        <div class="perk">
+          <div class="perk-ico">🤝</div>
+          <div><div class="perk-t">Direct Founder Access</div><div class="perk-d">No middlemen. Direct line to the people building your system.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="offer-card reveal">
+      <div class="offer-name">Full Setup + Ongoing Support</div>
+      <div class="offer-divider"></div>
+      <ul class="offer-list">
+        <li>Workflow audit & automation roadmap</li>
+        <li>Custom automation build (1–3 core systems)</li>
+        <li>Lead follow-up & CRM automation</li>
+        <li>AI chatbot setup & integration</li>
+        <li>Social media scheduling</li>
+        <li>Onboarding & team training</li>
+        <li>Ongoing support & refinement</li>
+        <li>Monthly check-ins with the founders</li>
+      </ul>
+      <p class="offer-note">Pricing is based on your business size and scope — discussed on your first call. No surprises.</p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdVHVOLAKsEzdLh5QrPwCC4w-0o2Q5RCoFRVSRjNqaLxFfyzw/viewform?usp=publish-editor" target="_blank" class="btn-primary" style="width:100%; text-align:center; display:block;">Claim a Founding Spot</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="reveal">
+    <div class="tag">FAQ</div>
+    <h2 class="title">Quick <span>Answers</span></h2>
+  </div>
+  <div class="faq-wrap reveal">
+    <div class="faq-item">
+      <button class="faq-q">You're new — why should I trust you? <i class="faq-ico">+</i></button>
+      <div class="faq-a">We don't ask you to take a leap of faith. We start by mapping your workflows and showing you exactly what we'd build — before you spend anything. Our founding rate reflects that we're early, and you're getting real value in exchange for working with us first.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Do I need to be tech-savvy? <i class="faq-ico">+</i></button>
+      <div class="faq-a">Not at all. We handle everything. Once it's live, most of it just runs. We train you on anything that needs your input — it's built to save time, not add tasks.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Will it work with the tools I already use? <i class="faq-ico">+</i></button>
+      <div class="faq-a">Almost certainly. We build around your existing stack. If something can't be connected, we'll tell you upfront — no surprises mid-build.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">How long does setup take? <i class="faq-ico">+</i></button>
+      <div class="faq-a">A focused 1–2 workflow build goes live in 1–2 weeks. Larger scopes take 3–4 weeks. You'll get a clear timeline before any work starts.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Is there a contract? <i class="faq-ico">+</i></button>
+      <div class="faq-a">We'll be transparent about terms on your first call. We're not in the business of locking in unhappy clients — our goal is to build something you'd never want to cancel.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-label">Coming Soon — Register Your Interest Now</div>
+  <h2 class="cta-h">Be First.<br>Get the<br>Founding Rate.</h2>
+  <p class="cta-sub">We're launching soon with a small founding cohort. Fill out the form and we'll reach out personally — no commitment, no pitch deck.</p>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSdVHVOLAKsEzdLh5QrPwCC4w-0o2Q5RCoFRVSRjNqaLxFfyzw/viewform?usp=publish-editor" target="_blank" class="cta-btn">Register Your Interest →</a>
+  <p class="cta-footnote">Founding spots are limited. Early registrants lock in discounted rates for life.</p>
+  <p class="cta-footnote" style="margin-top:1.5rem;">Or call us directly: <a href="tel:2898026510" title="Call (289) 802-6510" style="color:var(--dark); font-weight:700; text-decoration:underline;">(289) 802-6510</a></p>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <a href="#" class="f-logo"><span class="k-big">K</span><span class="k-rest">aliber Autonomy</span></a>
+  <span class="f-copy">© 2026 Kaliber Autonomy. Built for the trades.</span>
+  <div class="f-contact">
+    <a href="tel:2898026510" class="f-phone" title="Call (289) 802-6510">📞 (289) 802-6510</a>
+    <a href="/cdn-cgi/l/email-protection#82e9e3eeebe0e7f0e3f7f6edecedeffbc2e5efe3ebeeace1edef" class="f-phone" style="margin-left:1.5rem;">✉️ <span class="__cf_email__" data-cfemail="88e3e9e4e1eaedfae9fdfce7e6e7e5f1c8efe5e9e1e4a6ebe7e5">[email&#160;protected]</span></a>
+  </div>
+  <ul class="f-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#founding">Founding Offer</a></li>
+  </ul>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const els = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el => obs.observe(el));
+
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('ope
