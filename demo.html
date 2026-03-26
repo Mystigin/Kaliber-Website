@@ -202,6 +202,13 @@ body::before{
   .demo-btn-label{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(244,240,234,0.4);transition:color 0.2s;white-space:nowrap;}
   .demo-btn:hover .demo-btn-label{color:var(--gold-light);}
   .demo-btn.active .demo-btn-label{color:var(--gold);}
+  @media(max-width:640px){
+    .demo-switcher{justify-content:flex-start;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:8px;padding:10px 16px;}
+    .demo-switcher-label{display:none;}
+    .demo-btn{padding:10px 18px 10px 14px;}
+    .demo-btn-label{font-size:0.85rem;}
+    .demo-dot{width:8px;height:8px;}
+  }
 </style>
 </head>
 <body>
