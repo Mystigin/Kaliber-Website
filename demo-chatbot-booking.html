@@ -136,10 +136,10 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   .demo-btn:hover .demo-btn-label{color:var(--gold-light);}
   .demo-btn.active .demo-btn-label{color:var(--gold);}
   @media(max-width:640px){
-    .demo-switcher{justify-content:flex-start;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:8px;padding:10px 16px;}
+    .demo-switcher{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 16px;}
     .demo-switcher-label{display:none;}
-    .demo-btn{padding:10px 18px 10px 14px;}
-    .demo-btn-label{font-size:0.85rem;}
+    .demo-btn{justify-content:center;padding:14px 10px;}
+    .demo-btn-label{font-size:0.88rem;}
     .demo-dot{width:8px;height:8px;}
   }
   .demo-btn.active .demo-btn-label{color:var(--gold);}
