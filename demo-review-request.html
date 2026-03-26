@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Review Automation | Kaliber Autonomy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#E8A020;--gold-light:#F5B84A;--gold-dim:rgba(232,160,32,0.12);
+  --dark:#0C0C0C;--dark-2:#141414;--dark-3:#1C1C1C;
+  --white:#F4F0EA;--muted:#888;--dim:rgba(244,240,234,0.5);
+  --border:rgba(255,255,255,0.07);--green:#22c55e;--yellow:#fbbf24;
+  --phone-bg:#0b0b0b;--phone-border:#1a1a1a;
+  --ff-h:'Bebas Neue',sans-serif;--ff-b:'Barlow',sans-serif;--ff-c:'Barlow Condensed',sans-serif;--ff-m:'JetBrains Mono',monospace;
+  --bg:var(--dark);--surface:var(--dark-2);--surface2:var(--dark-3);
+  --text:var(--white);--orange:var(--gold);--orange-dim:var(--gold-dim);--ff-d:var(--ff-h);
+}
+body{background:var(--dark);color:var(--white);font-family:var(--ff-b);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:136px 20px 60px;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+.hdr{text-align:center;margin-bottom:48px;position:relative;z-index:1}
+.hdr-eyebrow{font-family:var(--ff-c);font-size:0.72rem;font-weight:600;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:0.75rem;}
+.hdr-eyebrow::before,.hdr-eyebrow::after{content:'';flex:1;max-width:60px;height:1px;background:var(--gold);opacity:0.4;}
+.hdr h1{font-family:var(--ff-h);font-size:clamp(3rem,6vw,6rem);line-height:0.95;letter-spacing:0.02em;margin-bottom:1rem;}
+.hdr h1 em{font-style:normal;color:var(--gold);display:block;}
+.hdr p{font-size:1rem;font-weight:300;color:var(--dim);max-width:520px;margin:0 auto;line-height:1.7;}
+.card{width:100%;max-width:960px;background:var(--dark-2);border:1px solid var(--border);padding:44px 44px 32px;position:relative;z-index:1;}
+.card::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;}
+.scene-grid{display:grid;grid-template-columns:260px 1fr;gap:56px;align-items:center;min-height:500px}
+.scene-full{display:none}
+.phone-wrap{display:flex;justify-content:center;align-items:center}
+.phone{width:244px;height:488px;background:var(--phone-bg);border-radius:40px;border:9px solid var(--phone-border);position:relative;box-shadow:0 0 0 1px rgba(255,255,255,0.03),0 40px 90px rgba(0,0,0,0.8),0 0 40px rgba(232,160,32,0.04);}
+.notch{width:96px;height:26px;background:#000;border-radius:0 0 18px 18px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:10}
+.screen{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;border-radius:32px}
+.ss{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;opacity:0;transition:opacity 0.4s ease;pointer-events:none}
+.ss.on{opacity:1;pointer-events:auto}
+
+/* S1: Job complete */
+.s1{background:linear-gradient(160deg,#0a1a0a 0%,#07090f 70%);justify-content:center;padding:24px 16px;gap:12px}
+.status-badge{font-family:var(--ff-m);font-size:8.5px;color:var(--green);letter-spacing:1.5px;display:flex;align-items:center;gap:6px;text-transform:uppercase;}
+.status-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green)}
+.job-card{width:100%;background:var(--dark-3);border:1px solid rgba(34,197,94,0.2);border-radius:4px;padding:13px}
+.jc-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.jc-icon{width:28px;height:28px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.25);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.jc-title{font-family:var(--ff-c);font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#fff}
+.jc-sub{font-family:var(--ff-m);font-size:8px;color:var(--muted)}
+.jc-row{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--dim);padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-family:var(--ff-b);}
+.jc-row:last-child{border-bottom:none}
+.complete-stamp{margin-top:10px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:2px;padding:7px 10px;font-family:var(--ff-m);font-size:8px;color:var(--green);text-align:center;letter-spacing:.5px;text-transform:uppercase;}
+
+/* S2: 48h delay */
+.s2{background:var(--phone-bg);justify-content:center;padding:24px 16px;gap:10px}
+.delay-icon{font-size:38px}
+.delay-title{font-family:var(--ff-h);font-size:24px;color:#fff;text-align:center;letter-spacing:0.03em;}
+.delay-sub{font-size:10px;color:var(--muted);text-align:center;font-family:var(--ff-m);line-height:1.7}
+.delay-timer{margin-top:8px;background:var(--gold-dim);border:1px solid rgba(232,160,32,0.2);border-radius:2px;padding:10px 20px;font-family:var(--ff-m);font-size:14px;font-weight:500;color:var(--gold);text-align:center}
+.delay-lbl{font-size:8px;color:var(--muted);font-family:var(--ff-m);text-align:center;margin-top:5px;letter-spacing:1px;text-transform:uppercase;}
+
+/* S3: SMS */
+.s3{background:var(--phone-bg);padding:0;justify-content:flex-start}
+.sms-hdr{padding:30px 14px 10px;border-bottom:1px solid var(--border);text-align:center;width:100%}
+.sms-cname{font-family:var(--ff-c);font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;}
+.sms-csub{font-family:var(--ff-m);font-size:8.5px;color:var(--muted)}
+.sms-thread{width:100%;padding:12px;display:flex;flex-direction:column;gap:8px}
+.bubble{max-width:84%;padding:8px 12px;border-radius:8px;font-size:10px;line-height:1.5;opacity:0;transition:opacity .4s ease,transform .35s ease;transform:translateY(6px);font-family:var(--ff-b);}
+.bubble.show{opacity:1;transform:translateY(0)}
+.b-out{background:var(--gold-dim);border:1px solid rgba(232,160,32,0.2);color:var(--text);align-self:flex-end;border-bottom-right-radius:2px}
+.review-btn{align-self:flex-end;background:var(--gold);border-radius:2px;padding:7px 14px;font-family:var(--ff-c);font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--dark);opacity:0;transition:opacity .4s ease .8s;}
+.review-btn.show{opacity:1}
+
+/* S4: Review card */
+.s4{background:var(--phone-bg);padding:24px 14px;justify-content:center;gap:10px}
+.review-hdr{font-family:var(--ff-m);font-size:8.5px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
+.review-card{width:100%;background:var(--dark-3);border:1px solid rgba(251,191,36,0.2);border-radius:4px;padding:13px;transform:translateY(-14px);opacity:0;transition:all .5s cubic-bezier(.34,1.56,.64,1)}
+.review-card.pop{transform:translateY(0);opacity:1}
+.rv-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rv-ava{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#1a3a5c,#2d6a9f);display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:13px;color:#fff}
+.rv-name{font-family:var(--ff-c);font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#fff;}
+.rv-time{font-family:var(--ff-m);font-size:7.5px;color:var(--muted);margin-left:auto}
+.stars{color:var(--yellow);font-size:13px;letter-spacing:1px;margin-bottom:6px}
+.rv-body{font-size:9.5px;color:var(--dim);line-height:1.55;font-family:var(--ff-b);}
+.review-count{display:flex;align-items:center;gap:6px;margin-top:12px;font-family:var(--ff-m);font-size:8px;color:var(--muted)}
+.count-pill{background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.25);border-radius:2px;padding:4px 9px;color:var(--yellow);font-family:var(--ff-m);font-size:9px;font-weight:600}
+
+/* S5: Dashboard */
+.s5{background:var(--phone-bg);padding:24px 14px;justify-content:center;gap:10px}
+.dash-lbl{font-family:var(--ff-m);font-size:8.5px;color:var(--muted);letter-spacing:1.5px;align-self:stretch;text-transform:uppercase;}
+.dash-card{width:100%;background:var(--dark-3);border:1px solid var(--border);border-radius:4px;padding:12px}
+.dash-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:9px}
+.dash-row:last-child{border-bottom:none}
+.dash-label{color:var(--dim);font-family:var(--ff-b);}
+.dash-val{font-family:var(--ff-m);font-weight:600;color:#fff}
+.dash-val.up{color:var(--green)}
+.dash-val.star{color:var(--yellow)}
+.notif-drop{width:100%;background:var(--gold-dim);border:1px solid rgba(232,160,32,0.2);border-radius:2px;padding:10px 12px;display:flex;align-items:center;gap:8px;transform:translateY(-10px);opacity:0;transition:all .5s cubic-bezier(.34,1.56,.64,1)}
+.notif-drop.pop{transform:translateY(0);opacity:1}
+.notif-icon{font-size:16px;flex-shrink:0}
+.notif-txt{font-size:9px;color:var(--dim);line-height:1.5;font-family:var(--ff-b);}
+.notif-txt strong{color:var(--gold)}
+
+/* CONTEXT */
+.ctx{display:flex;flex-direction:column;gap:20px;position:relative;z-index:1}
+.ctx-step{font-family:var(--ff-c);font-size:0.72rem;font-weight:600;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;opacity:0;transform:translateX(16px);transition:opacity .4s ease,transform .4s ease;display:flex;align-items:center;gap:0.5rem;}
+.ctx-step::before{content:'';display:inline-block;width:20px;height:2px;background:var(--gold);}
+.ctx-head{font-family:var(--ff-h);font-size:clamp(2rem,3.4vw,3.5rem);line-height:0.95;letter-spacing:0.02em;opacity:0;transform:translateX(16px);transition:opacity .4s ease .1s,transform .4s ease .1s;white-space:pre-line;}
+.ctx-body{font-size:0.95rem;font-weight:300;color:var(--dim);line-height:1.7;opacity:0;transform:translateX(16px);transition:opacity .4s ease .2s,transform .4s ease .2s}
+.ctx-hl{opacity:0;transform:translateX(16px);transition:opacity .4s ease .3s,transform .4s ease .3s}
+.ctx-hl-inner{display:inline-flex;align-items:center;gap:8px;background:var(--gold-dim);border:1px solid rgba(232,160,32,0.2);padding:11px 16px;font-size:0.88rem;color:var(--white);line-height:1.4;font-family:var(--ff-b);}
+.ctx-hl-inner strong{color:var(--gold);font-family:var(--ff-m);}
+.ctx-step.v,.ctx-head.v,.ctx-body.v,.ctx-hl.v{opacity:1;transform:translateX(0)}
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:40px}
+.res-card{background:var(--dark-2);padding:2.5rem 2rem;text-align:center;opacity:0;transform:translateY(18px);transition:all .5s ease;position:relative;}
+.res-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);transform:scaleY(0);transform-origin:bottom;transition:transform 0.3s;}
+.res-card.v{opacity:1;transform:translateY(0);}
+.res-card.v::before{transform:scaleY(1);}
+.res-val{font-family:var(--ff-h);font-size:3rem;color:var(--gold);margin-bottom:0.5rem;letter-spacing:0.03em;line-height:1;}
+.res-lbl{font-size:0.85rem;color:var(--dim);line-height:1.5}
+.res-brand{text-align:center;opacity:0;transition:opacity .6s ease .85s;padding-top:2.5rem;}
+.res-brand.v{opacity:1}
+.res-bname{font-family:var(--ff-h);font-size:clamp(2rem,3vw,3.5rem);margin-bottom:0.5rem;letter-spacing:0.05em;}
+.res-bname span{color:var(--gold);}
+.res-btag{font-size:0.9rem;font-weight:300;color:var(--dim);margin-bottom:1rem;}
+.res-bcontact{display:inline-flex;gap:2rem;font-family:var(--ff-m);font-size:0.78rem;color:var(--gold);}
+.footer{display:flex;align-items:center;justify-content:space-between;margin-top:28px;padding-top:24px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px;position:relative;z-index:1;}
+.dots{display:flex;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--dark-3);border:1px solid rgba(255,255,255,0.1);cursor:pointer;transition:all .3s ease}
+.dot.done{background:rgba(232,160,32,0.3);border-color:rgba(232,160,32,0.3)}
+.dot.here{background:var(--gold);border-color:var(--gold);transform:scale(1.35)}
+.ctr{font-family:var(--ff-m);font-size:0.72rem;color:var(--muted)}
+.navs{display:flex;gap:10px}
+.nbtn{padding:9px 22px;border-radius:2px;border:1px solid var(--border);background:transparent;color:var(--white);font-family:var(--ff-c);font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all .2s ease;}
+.nbtn:hover{background:var(--dark-3);border-color:rgba(255,255,255,0.15)}
+.nbtn.pri{background:var(--gold);border-color:var(--gold);color:#0C0C0C;font-weight:700;}
+.nbtn.pri:hover{background:var(--gold-light);}
+.nbtn:disabled{opacity:.3;cursor:default;pointer-events:none}
+@media(max-width:680px){
+  .scene-grid{grid-template-columns:1fr;gap:28px}
+  .phone{width:210px;height:420px}
+  .res-grid{grid-template-columns:1fr}
+  .card{padding:28px 20px 24px}
+  .res-bcontact{flex-direction:column;gap:6px}
+}
+
+  /* DEMO SWITCHER */
+  .demo-switcher{position:fixed;top:64px;left:0;right:0;z-index:99;display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 5%;background:rgba(12,12,12,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.07);}
+  .demo-switcher-label{font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(244,240,234,0.3);margin-right:6px;white-space:nowrap;}
+  .demo-btn{display:flex;align-items:center;gap:7px;padding:6px 14px 6px 10px;border-radius:2px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:all 0.2s;text-decoration:none;position:relative;flex-shrink:0;}
+  .demo-btn:hover{background:rgba(232,160,32,0.12);border-color:rgba(232,160,32,0.5);}
+  .demo-btn.active{background:var(--gold-dim);border-color:var(--gold);}
+  .demo-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.25);flex-shrink:0;transition:all 0.2s;}
+  .demo-btn:hover .demo-dot{background:rgba(232,160,32,0.5);border-color:var(--gold);}
+  .demo-btn.active .demo-dot{background:var(--gold);border-color:var(--gold);}
+  .demo-btn-label{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(244,240,234,0.4);transition:color 0.2s;white-space:nowrap;}
+  .demo-btn:hover .demo-btn-label{color:var(--gold-light);}
+  .demo-btn.active .demo-btn-label{color:var(--gold);}
+</style>
+</head>
+<body>
+<nav style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:64px;background:rgba(12,12,12,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.07);">
+  <a href="index.html" style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.12em;color:#F4F0EA;text-decoration:none;"><span style="color:#E8A020;">K</span>aliber Autonomy</a>
+  <div style="display:flex;gap:2rem;align-items:center;">
+    <a href="index.html" style="font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#888;text-decoration:none;">← Back to Site</a>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdVHVOLAKsEzdLh5QrPwCC4w-0o2Q5RCoFRVSRjNqaLxFfyzw/viewform?usp=publish-editor" target="_blank" style="font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:#E8A020;color:#0C0C0C;padding:0.5rem 1.3rem;border-radius:2px;text-decoration:none;">Register</a>
+  </div>
+</nav>
+<div class="demo-switcher">
+  <span class="demo-switcher-label">Demos</span>
+  <a href="demo.html" class="demo-btn"><span class="demo-dot"></span><span class="demo-btn-label">Missed Call</span></a>
+  <a href="demo-chatbot-booking.html" class="demo-btn"><span class="demo-dot"></span><span class="demo-btn-label">AI Chatbot</span></a>
+  <a href="demo-estimate-followup.html" class="demo-btn"><span class="demo-dot"></span><span class="demo-btn-label">Estimate Follow-Up</span></a>
+  <a href="demo-review-request.html" class="demo-btn active"><span class="demo-dot"></span><span class="demo-btn-label">Review Request</span></a>
+</div>
+
+<div class="hdr">
+  <div class="hdr-eyebrow">Interactive Demo</div>
+  <h1>Happy customers who<br><em>never leave a review.</em></h1>
+  <p>See how an automated review request turns every completed job into a 5-star Google review — without ever asking in person.</p>
+</div>
+
+<div class="card">
+  <div class="scene-grid" id="phone-layout">
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen">
+
+          <!-- S1: Job complete -->
+          <div class="ss s1" id="sc-1">
+            <div class="status-badge">Job Marked Complete</div>
+            <div class="job-card">
+              <div class="jc-header">
+                <div class="jc-icon">&#128296;</div>
+                <div>
+                  <div class="jc-title">Job #2291</div>
+                  <div class="jc-sub">Tech: Mike D. &middot; Thu Apr 3</div>
+                </div>
+              </div>
+              <div class="jc-row"><span>Patricia W. &middot; Oakville, ON</span></div>
+              <div class="jc-row"><span>Boiler service &amp; flush</span></div>
+              <div class="jc-row"><span>2.5 hrs &middot; Completed 3:22 PM</span></div>
+              <div class="jc-row"><span>Invoice #2291 &mdash; $340 paid</span></div>
+              <div class="complete-stamp">Job Complete &mdash; Sequence Triggered</div>
+            </div>
+          </div>
+
+          <!-- S2: 48h delay -->
+          <div class="ss s2" id="sc-2">
+            <div class="delay-icon">&#9200;</div>
+            <div class="delay-title">48-hour wait.</div>
+            <div class="delay-sub">Intentional delay lets the customer<br>settle in before being contacted.<br>Better timing = higher response rate.</div>
+            <div class="delay-timer">48:00:00</div>
+            <div class="delay-lbl">Countdown to Review Request</div>
+          </div>
+
+          <!-- S3: SMS sent -->
+          <div class="ss s3" id="sc-3">
+            <div class="sms-hdr">
+              <div class="sms-cname">Northwind H&amp;C</div>
+              <div class="sms-csub">289-555-0192</div>
+            </div>
+            <div class="sms-thread">
+              <div class="bubble b-out" id="bbl1">Hi Patricia, Mike here from Northwind. Hope the boiler is running great. It would mean a lot to us if you had 60 seconds to leave a quick review &mdash; it helps our small business more than you know.</div>
+              <div class="review-btn" id="rev-btn">Leave a Google Review &rarr;</div>
+            </div>
+          </div>
+
+          <!-- S4: Review posted -->
+          <div class="ss s4" id="sc-4">
+            <div class="review-hdr">New Google Review &mdash; Northwind H&amp;C</div>
+            <div class="review-card" id="rv-card">
+              <div class="rv-head">
+                <div class="rv-ava">P</div>
+                <div>
+                  <div class="rv-name">Patricia W.</div>
+                </div>
+                <div class="rv-time">2 days after job</div>
+              </div>
+              <div class="stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+              <div class="rv-body">"Mike was fantastic &mdash; on time, explained everything, and left no mess. The boiler has never run better. Will absolutely be calling Northwind again."</div>
+            </div>
+            <div class="review-count">
+              <span>Total reviews:</span>
+              <span class="count-pill">47 &rarr; 48</span>
+              <span style="color:var(--yellow)">&#11088; 4.9 avg</span>
+            </div>
+          </div>
+
+          <!-- S5: Dashboard -->
+          <div class="ss s5" id="sc-5">
+            <div class="dash-lbl">Your Google Review Dashboard</div>
+            <div class="dash-card">
+              <div class="dash-row"><span class="dash-label">Total reviews</span><span class="dash-val">48</span></div>
+              <div class="dash-row"><span class="dash-label">Average rating</span><span class="dash-val star">&#11088; 4.9</span></div>
+              <div class="dash-row"><span class="dash-label">Reviews this month</span><span class="dash-val up">+9 &uarr;</span></div>
+              <div class="dash-row"><span class="dash-label">Request open rate</span><span class="dash-val up">74%</span></div>
+              <div class="dash-row"><span class="dash-label">Conversion rate</span><span class="dash-val up">38%</span></div>
+            </div>
+            <div class="notif-drop" id="notif-drop">
+              <div class="notif-icon">&#11088;</div>
+              <div class="notif-txt"><strong>New 5-star review from Patricia W.</strong><br>Google Maps ranking improving &mdash; 3 new leads this week attributed to search.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="ctx">
+      <div class="ctx-step" id="ctx-s"></div>
+      <div class="ctx-head" id="ctx-h"></div>
+      <div class="ctx-body" id="ctx-b"></div>
+      <div class="ctx-hl"><div class="ctx-hl-inner" id="ctx-hl"></div></div>
+    </div>
+  </div>
+
+  <div class="scene-full" id="res-layout">
+    <div class="res-grid">
+      <div class="res-card" id="rc1">
+        <div class="res-val">200–300%</div>
+        <div class="res-lbl">Increase in review volume reported by contractors using automated requests</div>
+      </div>
+      <div class="res-card" id="rc2" style="transition-delay:.15s">
+        <div class="res-val">Top 3</div>
+        <div class="res-lbl">More Google reviews = higher local search ranking = more inbound calls</div>
+      </div>
+      <div class="res-card" id="rc3" style="transition-delay:.3s">
+        <div class="res-val">0 asks</div>
+        <div class="res-lbl">No awkward in-person requests — the system handles it automatically, every time</div>
+      </div>
+    </div>
+    <div class="res-brand" id="rbrand">
+      <div class="res-bname">Kaliber <span>Autonomy</span></div>
+      <div class="res-btag">Automation built for Ontario trade contractors.</div>
+      <div class="res-bcontact">
+        <span>kaliberautonomy.com</span>
+        <span>289-802-6510</span>
+        <span>kaliberautonomy@gmail.com</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="dots" id="dots"></div>
+    <div class="ctr" id="ctr"></div>
+    <div class="navs">
+      <button class="nbtn" id="btn-p" onclick="prevScene()">← Prev</button>
+      <button class="nbtn pri" id="btn-n" onclick="advance()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var sceneIndex=0;
+var SCENES=[
+  {sc:'1',step:'STEP 01 — JOB COMPLETE',head:'Job done.\nInvoice paid.\nCustomer happy.',body:'Patricia is satisfied. Mike did great work. But without a system, this moment passes — no review, no referral, no record of a job well done. Most contractors do 3–5 jobs like this every day.',hl:'Average contractor completes <strong>15+ jobs/month</strong>'},
+  {sc:'2',step:'STEP 02 — INTENTIONAL WAIT',head:'48 hours.\nThen the\nrequest fires.',body:'Asking for a review the moment a job ends feels pushy. Waiting 48 hours gives the customer time to experience the result — a warm boiler, working AC, fixed pipes. That\'s when sentiment is highest.',hl:'Timed to <strong>peak customer satisfaction</strong>'},
+  {sc:'3',step:'STEP 03 — REVIEW REQUEST SENT',head:'One text.\nPersonal tone.\nDirect link.',body:'The message sounds like it came from Mike himself. It\'s warm, specific to the job, and includes a direct link to your Google review page — no searching, no friction. One tap and they\'re there.',hl:'One-tap link to <strong>your Google page</strong>'},
+  {sc:'4',step:'STEP 04 — 5-STAR REVIEW POSTED',head:'Patricia leaves\na review in 60\nseconds.',body:'A real customer, real words, real stars. This review now lives permanently on Google — showing up every time someone in Oakville searches for an HVAC company. This is compounding value.',hl:'Every review improves <strong>local search ranking</strong>'},
+  {sc:'5',step:'STEP 05 — MOMENTUM BUILDS',head:'9 reviews\nthis month.\nZero effort.',body:'After 60 days of consistent job completions with automated requests, your Google profile transforms. More stars means higher ranking means more inbound calls — all from work you were already doing.',hl:'Reviews compound — <strong>leads grow automatically</strong>'}
+];
+function activateScreen(id){var s=document.querySelectorAll('.ss');for(var i=0;i<s.length;i++)s[i].classList.remove('on');var el=document.getElementById('sc-'+id);if(el)el.classList.add('on');}
+function setCtx(d){var els=['ctx-s','ctx-h','ctx-b'];for(var i=0;i<els.length;i++)document.getElementById(els[i]).classList.remove('v');document.querySelector('.ctx-hl').classList.remove('v');setTimeout(function(){document.getElementById('ctx-s').textContent=d.step;document.getElementById('ctx-h').textContent=d.head;document.getElementById('ctx-b').textContent=d.body;document.getElementById('ctx-hl').innerHTML=d.hl;requestAnimationFrame(function(){requestAnimationFrame(function(){document.getElementById('ctx-s').classList.add('v');document.getElementById('ctx-h').classList.add('v');document.getElementById('ctx-b').classList.add('v');document.querySelector('.ctx-hl').classList.add('v');});});},180);}
+function runEffects(idx){
+  var bbl1=document.getElementById('bbl1');
+  var revBtn=document.getElementById('rev-btn');
+  var rvCard=document.getElementById('rv-card');
+  var notifDrop=document.getElementById('notif-drop');
+  if(bbl1)bbl1.classList.remove('show');
+  if(revBtn)revBtn.classList.remove('show');
+  if(rvCard)rvCard.classList.remove('pop');
+  if(notifDrop)notifDrop.classList.remove('pop');
+  if(idx===2){setTimeout(function(){if(bbl1)bbl1.classList.add('show');},400);setTimeout(function(){if(revBtn)revBtn.classList.add('show');},1000);}
+  if(idx===3){setTimeout(function(){if(rvCard)rvCard.classList.add('pop');},400);}
+  if(idx===4){setTimeout(function(){if(notifDrop)notifDrop.classList.add('pop');},700);}
+}
+function updateFooter(){var dc=document.getElementById('dots');dc.innerHTML='';for(var i=0;i<SCENES.length;i++){var d=document.createElement('div');d.className='dot'+(i===sceneIndex?' here':i<sceneIndex?' done':'');(function(idx){d.onclick=function(){go(idx);};})(i);dc.appendChild(d);}document.getElementById('ctr').textContent=(sceneIndex+1)+' / '+SCENES.length;document.getElementById('btn-p').disabled=(sceneIndex===0);}
+function go(idx){if(idx<0||idx>=SCENES.length)return;sceneIndex=idx;activateScreen(SCENES[sceneIndex].sc);setCtx(SCENES[sceneIndex]);runEffects(sceneIndex);updateFooter();document.getElementById('phone-layout').style.display='grid';document.getElementById('res-layout').style.display='none';var nb=document.getElementById('btn-n');nb.textContent='Next →';nb.onclick=advance;}
+function showResults(){document.getElementById('phone-layout').style.display='none';document.getElementById('res-layout').style.display='block';var nb=document.getElementById('btn-n');nb.textContent='↺ Replay';nb.onclick=replay;var cards=['rc1','rc2','rc3'];for(var i=0;i<cards.length;i++){(function(id,delay){setTimeout(function(){document.getElementById(id).classList.add('v');},delay);})(cards[i],i*160);}setTimeout(function(){document.getElementById('rbrand').classList.add('v');},900);}
+function replay(){['rc1','rc2','rc3','rbrand'].forEach(function(id){document.getElementById(id).classList.remove('v');});go(0);}
+function advance(){if(sceneIndex===SCENES.length-1)showResults();else go(sceneIndex+1);}
+function prevScene(){go(sceneIndex-1);}
+go(0);
+</script>
+</body>
+</html>
