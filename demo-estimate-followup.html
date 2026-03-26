@@ -135,11 +135,16 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   @media(max-width:640px){
     body{padding-top:210px;padding-bottom:16px;}
     .hdr{display:none;}
+    .card{display:flex;flex-direction:column;padding:12px;}
+    .footer{order:-1;margin:0 0 10px;padding:0;border:none;justify-content:flex-end;gap:8px;}
+    .dots{display:none;}
+    .ctr{font-size:0.68rem;margin-right:auto;}
+    .nbtn{padding:7px 14px;font-size:0.76rem;}
     .scene-grid{gap:12px;}
-    .phone{width:155px;height:310px;}
-    .card{padding:16px 16px 14px;}
+    .phone{width:185px;height:370px;}
     .ctx-head{font-size:clamp(1.4rem,5vw,2rem);}
     .ctx-body{font-size:0.82rem;line-height:1.5;}
+    .ctx-hl{display:none;}
     .demo-switcher{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 16px;}
     .demo-switcher-label{display:none;}
     .demo-btn{justify-content:center;padding:14px 10px;}
