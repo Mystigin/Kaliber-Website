@@ -136,7 +136,13 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   .demo-btn:hover .demo-btn-label{color:var(--gold-light);}
   .demo-btn.active .demo-btn-label{color:var(--gold);}
   @media(max-width:640px){
-    body{padding-top:210px;}
+    body{padding-top:210px;padding-bottom:16px;}
+    .hdr{display:none;}
+    .scene-grid{gap:12px;}
+    .phone{width:155px;height:310px;}
+    .card{padding:16px 16px 14px;}
+    .ctx-head{font-size:clamp(1.4rem,5vw,2rem);}
+    .ctx-body{font-size:0.82rem;line-height:1.5;}
     .demo-switcher{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 16px;}
     .demo-switcher-label{display:none;}
     .demo-btn{justify-content:center;padding:14px 10px;}
