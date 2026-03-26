@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Kaliber Autonomy — Built for the Trades</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230C0C0C'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia%2C serif' font-weight='700' font-size='48' fill='%23E8A020'%3EK%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +26,7 @@
   body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
 
   /* NAV */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; height: 64px; background: rgba(12,12,12,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); transition: box-shadow 0.3s; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: env(safe-area-inset-top) 5% 0; height: calc(64px + env(safe-area-inset-top)); background: rgba(12,12,12,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); transition: box-shadow 0.3s; }
   .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.12em; color: var(--white); text-decoration: none; }
   .nav-logo .k-big { color: var(--gold); }
   .nav-logo .k-rest { color: var(--white); }
@@ -37,7 +37,7 @@
   .nav-cta:hover { background: var(--gold-light) !important; }
 
   /* BANNER */
-  .top-banner { position: fixed; top: 64px; left: 0; right: 0; z-index: 99; background: var(--gold); padding: 0.45rem 5%; display: flex; align-items: center; justify-content: center; gap: 1rem; }
+  .top-banner { position: fixed; top: calc(64px + env(safe-area-inset-top)); left: 0; right: 0; z-index: 99; background: var(--gold); padding: 0.45rem 5%; display: flex; align-items: center; justify-content: center; gap: 1rem; }
   .top-banner p { font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dark); }
   .top-banner a { font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dark); text-decoration: underline; white-space: nowrap; }
 
