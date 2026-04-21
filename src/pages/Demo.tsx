@@ -37,9 +37,20 @@ function ScenarioTextback() {
   }, []);
 
   useEffect(() => {
-    if (step >= 3 && smsBodyRef.current) {
-      smsBodyRef.current.scrollTop = smsBodyRef.current.scrollHeight;
-    }
+    if (step < 3 || !smsBodyRef.current) return;
+    const container = smsBodyRef.current;
+    const scrollToLatest = () => {
+      const shown = container.querySelectorAll<HTMLElement>(
+        ".msg.shown, .typing.shown, .msg-time.shown"
+      );
+      const last = shown[shown.length - 1];
+      if (!last) return;
+      const target = last.offsetTop + last.offsetHeight - container.clientHeight + 8;
+      container.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
+    };
+    const t1 = window.setTimeout(scrollToLatest, 50);
+    const t2 = window.setTimeout(scrollToLatest, 400);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [step]);
 
   const play = useCallback(() => {
