@@ -836,7 +836,9 @@ export default function Demo() {
         /* Transcript — reversed order container */
         .call-transcript { display: flex; flex-direction: column; }
         .call-transcript h4 { font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--steel); margin-bottom: 8px; }
-        .transcript-entries { display: flex; flex-direction: column; gap: 8px; }
+        .transcript-entries { display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto; padding-right: 4px; }
+        .transcript-entries::-webkit-scrollbar { width: 4px; }
+        .transcript-entries::-webkit-scrollbar-thumb { background: rgba(14,14,12,0.2); border-radius: 2px; }
         .turn { font-size: 13px; line-height: 1.4; padding: 10px 12px; border-left: 2px solid transparent; opacity: 0; transform: translateX(-5px); transition: opacity 0.3s, transform 0.3s, border-color 0.15s; background: rgba(14,14,12,0.03); border-radius: 0 4px 4px 0; }
         .turn.shown { opacity: 1; transform: translateX(0); }
         .turn .who { font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; color: var(--steel-2); }
