@@ -866,6 +866,89 @@ export default function Demo() {
         .cb-steps .p { font-size: 12px; color: rgba(14,14,12,0.65); line-height: 1.45; }
         .cb-result { margin-top: 16px; padding: 14px 16px; background: oklch(0.97 0.03 75); border-radius: 3px; font-size: 13px; line-height: 1.45; display: grid; grid-template-columns: 18px 1fr; gap: 10px; align-items: start; }
         .cb-result .ico { color: var(--amber-ink); font-weight: 700; font-family: var(--f-mono); margin-top: 1px; }
+
+        /* ─── Mobile streamline ─── */
+        @media (max-width: 780px) {
+          .d-hero { padding: 28px 0 12px; }
+          .d-hero p { font-size: 15px; margin-top: 10px; }
+
+          /* Demo selector tabs — make them visibly read as buttons */
+          .picker-grid { gap: 10px; border-top: none; border-bottom: none; padding: 14px 0 4px; }
+          .pick {
+            border: 1.5px solid var(--ink) !important;
+            border-radius: 10px;
+            padding: 14px 16px;
+            background: #fff;
+            box-shadow: 0 2px 0 var(--ink);
+            min-height: 64px;
+            gap: 4px;
+          }
+          .pick:not(:last-child) { border-bottom: 1.5px solid var(--ink) !important; }
+          .pick.active {
+            background: var(--amber);
+            color: var(--ink);
+            border-color: var(--ink) !important;
+            box-shadow: 0 2px 0 var(--ink);
+          }
+          .pick.active .pick-num { color: var(--ink); opacity: 0.7; }
+          .pick-title { font-size: 16px; }
+          .pick-sub { font-size: 12px; }
+
+          /* Scenario header & play button */
+          .scenario-wrap { padding-top: 20px; }
+          .scenario-top { gap: 12px; margin-bottom: 16px; }
+          .scenario-top h2 { font-size: 22px !important; }
+          .scenario-sub { font-size: 13px; margin-top: 4px; }
+          .play-btn { width: 100%; justify-content: center; padding: 14px 20px; font-size: 14px; min-height: 48px; }
+
+          .demo-body { gap: 18px; }
+          .demo-left { gap: 14px; }
+
+          /* Step list — compact */
+          .step-list { gap: 6px; }
+          .step-item { padding: 8px 12px; grid-template-columns: 22px 1fr; gap: 10px; }
+          .step-num { width: 22px; height: 22px; font-size: 9px; }
+          .step-label { font-size: 13px; }
+
+          .status-box { min-height: 0; padding: 12px 14px; }
+          .status-value { font-size: 13px; }
+
+          /* Phone — smaller on mobile */
+          .phone { width: 260px; height: 500px; }
+
+          /* Website mock */
+          .website-mock { height: 380px; }
+
+          /* Call panel */
+          .call-visual { min-height: 160px; padding: 18px; }
+          .avatar-ring { width: 90px; height: 90px; }
+          .avatar-mono { font-size: 38px; }
+          .call-status-text { margin-top: 10px; }
+          .call-transcript { height: 200px; }
+          .turn { font-size: 12px; padding: 8px 10px; }
+
+          /* Custom builds — chips as clear buttons */
+          .cb-selector { gap: 8px; margin-bottom: 14px; }
+          .cb-chip {
+            flex: 1 1 calc(50% - 4px);
+            padding: 12px 14px;
+            min-height: 48px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1.5px solid var(--ink);
+            border-radius: 10px;
+            box-shadow: 0 2px 0 var(--ink);
+            text-align: center;
+          }
+          .cb-chip.active { background: var(--amber); color: var(--ink); border-color: var(--ink); }
+          .cb-detail-head { padding: 18px 18px; }
+          .cb-detail-head h3 { font-size: 20px; }
+          .cb-detail-body { padding: 18px; }
+          .cb-steps li { padding: 14px; }
+          .cb-steps .t { font-size: 14px; }
+
+          .demo-content { padding: 0 0 48px; }
+        }
       `}</style>
     </>
   );
