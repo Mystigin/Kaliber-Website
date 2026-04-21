@@ -71,14 +71,48 @@ export default function Register() {
     [data]
   );
 
+  const submitToGoogle = useCallback((d: FormData) => {
+    const endpoint =
+      "https://docs.google.com/forms/d/e/1FAIpQLSdVHVOLAKsEzdLh5QrPwCC4w-0o2Q5RCoFRVSRjNqaLxFfyzw/formResponse";
+    const sizeMap: Record<string, string> = {
+      "Just me": "1",
+      "2–5": "2-4",
+      "6–15": "5-9",
+      "16–50": "10+",
+      "50+": "10+",
+    };
+    const painFull = [
+      d.pain.trim(),
+      `Trade: ${d.trade}`,
+      `Team size: ${d.size}`,
+      `Best time: ${d.bestTime}`,
+    ]
+      .filter(Boolean)
+      .join(" | ");
+    const fd = new URLSearchParams();
+    fd.append("entry.1664697021", d.name);
+    fd.append("entry.1987023741", d.email);
+    fd.append("entry.941583503", d.phone);
+    fd.append("entry.453765133", d.company);
+    fd.append("entry.121676930", sizeMap[d.size] || "1");
+    fd.append("entry.533853441", painFull);
+    fetch(endpoint, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: fd.toString(),
+    }).catch(() => {});
+  }, []);
+
   const next = useCallback(() => {
     if (!validate(step)) return;
     if (step < maxStep) setStep(step + 1);
     else {
+      submitToGoogle(data);
       setStep(4);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [step, validate]);
+  }, [step, validate, data, submitToGoogle]);
 
   const back = useCallback(() => {
     if (step > 1) setStep(step - 1);
