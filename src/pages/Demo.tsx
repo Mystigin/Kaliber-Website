@@ -27,6 +27,7 @@ function ScenarioTextback() {
   const [playing, setPlaying] = useState(false);
   const [step, setStep] = useState(0);
   const timers = useRef<number[]>([]);
+  const smsBodyRef = useRef<HTMLDivElement>(null);
 
   const reset = useCallback(() => {
     timers.current.forEach(clearTimeout);
@@ -35,17 +36,25 @@ function ScenarioTextback() {
     setPlaying(false);
   }, []);
 
+  useEffect(() => {
+    if (step >= 3 && smsBodyRef.current) {
+      smsBodyRef.current.scrollTop = smsBodyRef.current.scrollHeight;
+    }
+  }, [step]);
+
   const play = useCallback(() => {
     if (playing) { reset(); return; }
     setPlaying(true); setStep(0);
+    const isMobile = window.matchMedia("(max-width: 780px)").matches;
+    const m = isMobile ? 1.5 : 1;
     const t: number[] = [];
-    t.push(window.setTimeout(() => setStep(1), 600));
-    t.push(window.setTimeout(() => setStep(2), 2400));
-    t.push(window.setTimeout(() => setStep(3), 4800));
-    t.push(window.setTimeout(() => setStep(4), 7200));
-    t.push(window.setTimeout(() => setStep(5), 9600));
-    t.push(window.setTimeout(() => setStep(6), 12000));
-    t.push(window.setTimeout(() => { setStep(7); setPlaying(false); }, 14500));
+    t.push(window.setTimeout(() => setStep(1), 600 * m));
+    t.push(window.setTimeout(() => setStep(2), 2400 * m));
+    t.push(window.setTimeout(() => setStep(3), 4800 * m));
+    t.push(window.setTimeout(() => setStep(4), 7200 * m));
+    t.push(window.setTimeout(() => setStep(5), 9600 * m));
+    t.push(window.setTimeout(() => setStep(6), 12000 * m));
+    t.push(window.setTimeout(() => { setStep(7); setPlaying(false); }, 14500 * m));
     timers.current = t;
   }, [playing, reset]);
 
@@ -172,7 +181,7 @@ function ScenarioTextback() {
                 <div className="from">Kaliber Auto-Text</div>
                 <div className="num">+1 (289) 802-6510</div>
               </div>
-              <div className="sms-body">
+              <div className="sms-body" ref={smsBodyRef}>
                 <div className={`msg in ${step >= 3 ? "shown" : ""}`}>
                   Hi! Sorry we missed your call. We're on a job right now. What can we help you with today?
                 </div>
@@ -228,13 +237,14 @@ function ScenarioChat() {
   const play = useCallback(() => {
     if (playing) { reset(); return; }
     setPlaying(true); setStep(0); setChatOpen(false);
+    const m = window.matchMedia("(max-width: 780px)").matches ? 1.5 : 1;
     const t: number[] = [];
-    t.push(window.setTimeout(() => setStep(1), 800));
-    t.push(window.setTimeout(() => { setStep(2); setChatOpen(true); }, 2400));
-    t.push(window.setTimeout(() => setStep(3), 4200));
-    t.push(window.setTimeout(() => setStep(4), 6400));
-    t.push(window.setTimeout(() => setStep(5), 8600));
-    t.push(window.setTimeout(() => { setStep(6); setPlaying(false); }, 10500));
+    t.push(window.setTimeout(() => setStep(1), 800 * m));
+    t.push(window.setTimeout(() => { setStep(2); setChatOpen(true); }, 2400 * m));
+    t.push(window.setTimeout(() => setStep(3), 4200 * m));
+    t.push(window.setTimeout(() => setStep(4), 6400 * m));
+    t.push(window.setTimeout(() => setStep(5), 8600 * m));
+    t.push(window.setTimeout(() => { setStep(6); setPlaying(false); }, 10500 * m));
     timers.current = t;
   }, [playing, reset]);
 
@@ -384,14 +394,15 @@ function ScenarioCall() {
   const play = useCallback(() => {
     if (playing) { reset(); return; }
     setPlaying(true); setStep(0);
+    const m = window.matchMedia("(max-width: 780px)").matches ? 1.5 : 1;
     const t: number[] = [];
-    t.push(window.setTimeout(() => setStep(1), 1000));
-    t.push(window.setTimeout(() => setStep(2), 3200));
-    t.push(window.setTimeout(() => setStep(3), 5400));
-    t.push(window.setTimeout(() => setStep(4), 7600));
-    t.push(window.setTimeout(() => setStep(5), 9800));
-    t.push(window.setTimeout(() => setStep(6), 12000));
-    t.push(window.setTimeout(() => { setStep(7); setPlaying(false); }, 14000));
+    t.push(window.setTimeout(() => setStep(1), 1000 * m));
+    t.push(window.setTimeout(() => setStep(2), 3200 * m));
+    t.push(window.setTimeout(() => setStep(3), 5400 * m));
+    t.push(window.setTimeout(() => setStep(4), 7600 * m));
+    t.push(window.setTimeout(() => setStep(5), 9800 * m));
+    t.push(window.setTimeout(() => setStep(6), 12000 * m));
+    t.push(window.setTimeout(() => { setStep(7); setPlaying(false); }, 14000 * m));
     timers.current = t;
   }, [playing, reset]);
 
