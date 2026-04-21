@@ -814,8 +814,7 @@ export default function Demo() {
         .chat-input { padding: 8px; border-top: 1px solid var(--rule); background: #fff; font-family: var(--f-mono); font-size: 9px; color: var(--steel); text-align: center; }
 
         /* ─── Call panel ─── */
-        .call-panel { display: flex; flex-direction: column; gap: 20px; min-height: 0; max-height: 560px; }
-        .call-transcript { flex: 1 1 auto; min-height: 0; overflow: hidden; }
+        .call-panel { display: flex; flex-direction: column; gap: 20px; }
         .call-visual { background: var(--ink); border-radius: 6px; padding: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; min-height: 260px; }
         .avatar-ring { width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, oklch(0.85 0.16 75), var(--amber)); display: grid; place-items: center; position: relative; box-shadow: 0 0 0 0 oklch(0.78 0.16 75 / 0.4); animation: ringPulse 2s ease-out infinite; }
         @keyframes ringPulse { 0% { box-shadow: 0 0 0 0 oklch(0.78 0.16 75 / 0.5); } 100% { box-shadow: 0 0 0 40px oklch(0.78 0.16 75 / 0); } }
@@ -835,9 +834,9 @@ export default function Demo() {
         @keyframes wave { from { transform: scaleY(0.4); } to { transform: scaleY(1); } }
 
         /* Transcript — reversed order container */
-        .call-transcript { display: flex; flex-direction: column; }
+        .call-transcript { display: flex; flex-direction: column; height: 240px; }
         .call-transcript h4 { font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--steel); margin-bottom: 8px; }
-        .transcript-entries { display: flex; flex-direction: column; gap: 8px; flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 4px; }
+        .transcript-entries { display: flex; flex-direction: column; gap: 8px; flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 6px; border: 1px solid rgba(14,14,12,0.1); border-radius: 4px; padding: 8px; background: rgba(255,255,255,0.4); }
         .transcript-entries::-webkit-scrollbar { width: 4px; }
         .transcript-entries::-webkit-scrollbar-thumb { background: rgba(14,14,12,0.2); border-radius: 2px; }
         .turn { font-size: 13px; line-height: 1.4; padding: 10px 12px; border-left: 2px solid transparent; opacity: 0; transform: translateX(-5px); transition: opacity 0.3s, transform 0.3s, border-color 0.15s; background: rgba(14,14,12,0.03); border-radius: 0 4px 4px 0; }
