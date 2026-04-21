@@ -782,11 +782,11 @@ export default function Demo() {
         .ring-btn.accept { background: #5fad52; }
 
         /* SMS */
-        .sms-view { flex: 1; display: flex; flex-direction: column; }
+        .sms-view { flex: 1; display: flex; flex-direction: column; min-height: 0; }
         .sms-header { border-bottom: 1px solid #e3e0d8; padding-bottom: 8px; margin-bottom: 10px; text-align: center; }
         .sms-header .from { font-weight: 600; font-size: 13px; }
         .sms-header .num { font-family: var(--f-mono); font-size: 9px; color: var(--steel); margin-top: 2px; }
-        .sms-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+        .sms-body { flex: 1 1 0; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
         .msg { max-width: 82%; padding: 8px 11px; border-radius: 14px; font-size: 13px; line-height: 1.3; opacity: 0; transform: translateY(6px); transition: opacity 0.35s, transform 0.35s; }
         .msg.shown { opacity: 1; transform: translateY(0); }
         .msg.in { align-self: flex-start; background: #ebe9e2; color: var(--ink); border-bottom-left-radius: 4px; }
