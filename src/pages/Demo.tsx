@@ -901,30 +901,63 @@ export default function Demo() {
           .scenario-sub { font-size: 13px; margin-top: 4px; }
           .play-btn { width: 100%; justify-content: center; padding: 14px 20px; font-size: 14px; min-height: 48px; }
 
-          .demo-body { gap: 18px; }
-          .demo-left { gap: 14px; }
-
-          /* Step list — compact */
-          .step-list { gap: 6px; }
-          .step-item { padding: 8px 12px; grid-template-columns: 22px 1fr; gap: 10px; }
-          .step-num { width: 22px; height: 22px; font-size: 9px; }
-          .step-label { font-size: 13px; }
-
-          .status-box { min-height: 0; padding: 12px 14px; }
+          /* Side-by-side: steps on left, visual on right */
+          .demo-body {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            grid-template-areas:
+              "steps  visual"
+              "status status"
+              "calendar calendar"
+              "transcript transcript";
+            gap: 10px;
+            align-items: start;
+          }
+          .demo-left { display: contents; }
+          .call-panel { display: contents; }
+          .step-list { grid-area: steps; gap: 5px; }
+          .status-box { grid-area: status; min-height: 0; padding: 10px 12px; }
+          .calendar-panel { grid-area: calendar; }
           .status-value { font-size: 13px; }
 
-          /* Phone — smaller on mobile */
-          .phone { width: 260px; height: 500px; }
+          /* Step list — compact */
+          .step-item { padding: 6px 10px; grid-template-columns: 20px 1fr; gap: 8px; }
+          .step-num { width: 20px; height: 20px; font-size: 9px; }
+          .step-label { font-size: 12.5px; line-height: 1.3; }
 
-          /* Website mock */
-          .website-mock { height: 380px; }
+          /* Phone — scale down via zoom so inner content stays proportional */
+          .phone {
+            grid-area: visual;
+            width: 260px;
+            height: 500px;
+            zoom: 0.56;
+            margin: 0;
+            justify-self: end;
+          }
 
-          /* Call panel */
-          .call-visual { min-height: 160px; padding: 18px; }
-          .avatar-ring { width: 90px; height: 90px; }
-          .avatar-mono { font-size: 38px; }
-          .call-status-text { margin-top: 10px; }
-          .call-transcript { height: 200px; }
+          /* Website mock — scale down, keep enough internal width */
+          .website-mock {
+            grid-area: visual;
+            width: 300px;
+            height: 400px;
+            zoom: 0.55;
+            justify-self: end;
+          }
+
+          /* Call scenario: visual beside steps, transcript full-width below */
+          .call-visual {
+            grid-area: visual;
+            min-height: 0;
+            height: 160px;
+            width: 150px;
+            padding: 12px;
+            justify-self: end;
+          }
+          .avatar-ring { width: 70px; height: 70px; }
+          .avatar-mono { font-size: 30px; }
+          .call-status-text { margin-top: 8px; font-size: 9px; }
+          .audio-waves { margin-top: 8px; height: 14px; }
+          .call-transcript { grid-area: transcript; height: 200px; margin-top: 4px; }
           .turn { font-size: 12px; padding: 8px 10px; }
 
           /* Custom builds — chips as clear buttons */
