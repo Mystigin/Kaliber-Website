@@ -194,8 +194,6 @@ export default function Register() {
             <div className="reg-contact">
               Prefer to talk? <br />
               <a href="tel:2898026510">(289) 802-6510</a>
-              <br />
-              <a href="mailto:daniel@kaliberautonomy.com">daniel@kaliberautonomy.com</a>
             </div>
           </div>
         </aside>

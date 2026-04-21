@@ -20,7 +20,6 @@ export default function Footer() {
           <div className="footer-col">
             <h4>Contact</h4>
             <a href="tel:2898026510">(289) 802-6510</a>
-            <a href="mailto:daniel@kaliberautonomy.com">daniel@kaliberautonomy.com</a>
           </div>
           <div className="footer-col">
             <h4>Legal</h4>
