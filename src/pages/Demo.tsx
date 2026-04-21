@@ -880,11 +880,13 @@ export default function Demo() {
 
         /* ─── Mobile streamline ─── */
         @media (max-width: 780px) {
-          .d-hero { padding: 28px 0 12px; }
-          .d-hero p { font-size: 15px; margin-top: 10px; }
+          .d-hero { padding: 20px 0 4px; }
+          .d-hero h1 { font-size: 34px; }
+          .d-hero p { font-size: 15px; margin-top: 8px; }
 
           /* Demo selector tabs — make them visibly read as buttons */
-          .picker-grid { gap: 10px; border-top: none; border-bottom: none; padding: 14px 0 4px; }
+          .picker { padding: 0; }
+          .picker-grid { gap: 8px; border-top: none; border-bottom: none; padding: 6px 0 0; }
           .pick {
             border: 1.5px solid var(--ink) !important;
             border-radius: 10px;
@@ -906,8 +908,8 @@ export default function Demo() {
           .pick-sub { font-size: 12px; }
 
           /* Scenario header & play button */
-          .scenario-wrap { padding-top: 20px; }
-          .scenario-top { gap: 12px; margin-bottom: 16px; }
+          .scenario-wrap { padding-top: 10px; }
+          .scenario-top { gap: 8px; margin-bottom: 12px; }
           .scenario-top h2 { font-size: 22px !important; }
           .scenario-sub { font-size: 13px; margin-top: 4px; }
           .play-btn { width: 100%; justify-content: center; padding: 14px 20px; font-size: 14px; min-height: 48px; }
