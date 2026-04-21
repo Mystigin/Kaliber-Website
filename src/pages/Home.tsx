@@ -26,6 +26,7 @@ function useReveal() {
 /* ─── Process number scramble ─── */
 function useProcessScramble() {
   useEffect(() => {
+    if (window.matchMedia("(max-width: 780px)").matches) return;
     const processSection = document.querySelector(".process");
     if (!processSection) return;
     const nums = processSection.querySelectorAll(".pstep-num");
