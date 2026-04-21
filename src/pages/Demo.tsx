@@ -959,14 +959,34 @@ export default function Demo() {
             justify-self: end;
           }
 
-          /* Website mock — scale down, keep enough internal width */
+          /* Website mock — native small-size styling (no zoom clipping) */
           .website-mock {
             grid-area: visual;
-            width: 300px;
-            height: 400px;
-            zoom: 0.55;
+            width: 170px;
+            height: 280px;
+            border-radius: 10px;
             justify-self: end;
+            box-shadow: 0 4px 12px -4px rgba(14,14,12,0.15);
           }
+          .site-bar { padding: 5px 7px; gap: 5px; }
+          .site-dots { gap: 3px; }
+          .site-dots span { width: 5px; height: 5px; }
+          .site-url { font-size: 7px; padding: 2px 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+          .site-body { padding: 10px 10px 14px; }
+          .site-body h4 { font-size: 14px; margin-bottom: 3px; }
+          .site-body .site-sub { font-size: 8px; margin-bottom: 8px; }
+          .site-body .site-blurb { font-size: 8.5px; line-height: 1.4; max-width: none; }
+          .site-body .site-nav { font-size: 7px; gap: 6px; margin-bottom: 10px; padding-bottom: 5px; }
+          .chat-bubble { width: 30px; height: 30px; bottom: 8px; right: 8px; }
+          .chat-bubble svg { width: 14px; height: 14px; }
+          .chat-win { width: calc(100% - 14px); max-width: 160px; height: 220px; bottom: 8px; right: 8px; border-radius: 8px; }
+          .chat-header { padding: 6px 8px; gap: 5px; }
+          .bot-avatar { width: 18px; height: 18px; font-size: 9px; }
+          .chat-header .ctitle { font-size: 9px; }
+          .chat-header .cstatus { font-size: 6px; }
+          .chat-body { padding: 6px; gap: 4px; }
+          .cmsg { font-size: 9px; padding: 5px 7px; border-radius: 7px; }
+          .chat-input { padding: 5px; font-size: 7px; }
 
           /* Call scenario: visual beside steps, transcript full-width below */
           .call-visual {
