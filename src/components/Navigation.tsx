@@ -26,18 +26,18 @@ export default function Navigation() {
       <div className="wrap nav-inner">
         <Link to="/" className="brand" aria-label="Kaliber Autonomy home">
           <span className="brand-mark" aria-hidden="true">K</span>
-          <span>Kaliber Autonomy</span>
+          <span className="brand-text">Kaliber Autonomy</span>
         </Link>
         <div className="nav-links">
           <button
-            className="nav-link-btn"
+            className="nav-link-btn nav-desktop-only"
             onClick={() => scrollToSection("services")}
             aria-label="Services section"
           >
             Services
           </button>
           <button
-            className="nav-link-btn"
+            className="nav-link-btn nav-desktop-only"
             onClick={() => scrollToSection("founding")}
             aria-label="Founding offer section"
           >
@@ -45,6 +45,7 @@ export default function Navigation() {
           </button>
           <Link
             to="/demo"
+            className="nav-demo"
             aria-label="See a demo"
             aria-current={isDemo ? "page" : undefined}
           >
