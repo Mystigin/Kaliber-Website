@@ -25,6 +25,7 @@ function useReveal() {
 type FormData = {
   name: string;
   company: string;
+  website: string;
   email: string;
   phone: string;
   trade: string;
@@ -37,7 +38,7 @@ export default function Register() {
   useReveal();
   const [step, setStep] = useState(1);
   const [data, setData] = useState<FormData>({
-    name: "", company: "", email: "", phone: "",
+    name: "", company: "", website: "", email: "", phone: "",
     trade: "", size: "", pain: "", bestTime: "Anytime",
   });
   const [errors, setErrors] = useState<Record<string, boolean>>({});
@@ -94,6 +95,7 @@ export default function Register() {
     fd.append("entry.1987023741", d.email);
     fd.append("entry.941583503", d.phone);
     fd.append("entry.453765133", d.company);
+    if (d.website.trim()) fd.append("entry.985088178", d.website.trim());
     fd.append("entry.121676930", sizeMap[d.size] || "1");
     fd.append("entry.533853441", painFull);
     fetch(endpoint, {
@@ -398,6 +400,21 @@ export default function Register() {
                   <div className="err-msg" id="err-size" role="alert">
                     Pick one
                   </div>
+                </div>
+
+                <div className="field">
+                  <label htmlFor="reg-website">
+                    Company website <span style={{ color: "var(--steel)", fontWeight: 400 }}>(optional)</span>
+                  </label>
+                  <input
+                    type="url"
+                    id="reg-website"
+                    name="website"
+                    autoComplete="url"
+                    placeholder="https://yourcompany.com"
+                    value={data.website}
+                    onChange={(e) => updateField("website", e.target.value)}
+                  />
                 </div>
               </div>
 
