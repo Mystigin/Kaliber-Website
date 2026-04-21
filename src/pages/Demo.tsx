@@ -814,8 +814,8 @@ export default function Demo() {
         .chat-input { padding: 8px; border-top: 1px solid var(--rule); background: #fff; font-family: var(--f-mono); font-size: 9px; color: var(--steel); text-align: center; }
 
         /* ─── Call panel ─── */
-        .call-panel { display: flex; flex-direction: column; gap: 20px; min-height: 0; }
-        .call-transcript { flex: 1 1 auto; min-height: 0; }
+        .call-panel { display: flex; flex-direction: column; gap: 20px; min-height: 0; max-height: 560px; }
+        .call-transcript { flex: 1 1 auto; min-height: 0; overflow: hidden; }
         .call-visual { background: var(--ink); border-radius: 6px; padding: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; min-height: 260px; }
         .avatar-ring { width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, oklch(0.85 0.16 75), var(--amber)); display: grid; place-items: center; position: relative; box-shadow: 0 0 0 0 oklch(0.78 0.16 75 / 0.4); animation: ringPulse 2s ease-out infinite; }
         @keyframes ringPulse { 0% { box-shadow: 0 0 0 0 oklch(0.78 0.16 75 / 0.5); } 100% { box-shadow: 0 0 0 40px oklch(0.78 0.16 75 / 0); } }
