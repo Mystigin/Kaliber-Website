@@ -236,6 +236,22 @@ function ScenarioChat() {
   const [step, setStep] = useState(0);
   const [chatOpen, setChatOpen] = useState(false);
   const timers = useRef<number[]>([]);
+  const chatBodyRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (step < 2 || !chatBodyRef.current) return;
+    const container = chatBodyRef.current;
+    const scrollToLatest = () => {
+      const shown = container.querySelectorAll<HTMLElement>(".cmsg.shown");
+      const last = shown[shown.length - 1];
+      if (!last) return;
+      const target = last.offsetTop + last.offsetHeight - container.clientHeight + 8;
+      container.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
+    };
+    const t1 = window.setTimeout(scrollToLatest, 50);
+    const t2 = window.setTimeout(scrollToLatest, 400);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [step]);
 
   const reset = useCallback(() => {
     timers.current.forEach(clearTimeout);
@@ -363,7 +379,7 @@ function ScenarioChat() {
                   <div className="cstatus">Online</div>
                 </div>
               </div>
-              <div className="chat-body">
+              <div className="chat-body" ref={chatBodyRef}>
                 <div className={`cmsg bot ${step >= 2 ? "shown" : ""}`}>
                   Hi there! 👋 I can help you book an appointment or answer questions about our AC services. What do you need?
                 </div>
@@ -825,7 +841,7 @@ export default function Demo() {
         .chat-header .ctitle { font-size: 12px; font-weight: 600; }
         .chat-header .cstatus { font-family: var(--f-mono); font-size: 8px; color: oklch(0.72 0.16 150); letter-spacing: 0.12em; text-transform: uppercase; display: flex; align-items: center; gap: 4px; margin-top: 2px; }
         .chat-header .cstatus::before { content: ''; width: 5px; height: 5px; background: oklch(0.72 0.16 150); border-radius: 50%; }
-        .chat-body { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; background: #faf9f4; }
+        .chat-body { flex: 1 1 0; min-height: 0; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; background: #faf9f4; }
         .cmsg { max-width: 82%; padding: 7px 10px; border-radius: 10px; font-size: 12px; line-height: 1.35; opacity: 0; transform: translateY(5px); transition: opacity 0.3s, transform 0.3s; }
         .cmsg.shown { opacity: 1; transform: translateY(0); }
         .cmsg.bot { align-self: flex-start; background: #ebe9e2; }
