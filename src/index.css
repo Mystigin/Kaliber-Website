@@ -451,6 +451,8 @@
     .footer-col a { padding: 10px 0; font-size: 15px; }
     section { padding-top: 56px !important; padding-bottom: 56px !important; }
     .hero { padding: 48px 0 64px !important; }
+    .btn-ghost { background: var(--ink); color: var(--bone); border-color: var(--ink); }
+    .btn-ghost:hover, .btn-ghost:focus, .btn-ghost:active { background: var(--ink); color: var(--bone); border-color: var(--ink); }
   }
 
   /* ---------- reduced motion ---------- */
