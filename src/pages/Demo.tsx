@@ -483,13 +483,11 @@ function ScenarioCall() {
               {step >= 1 && step < 7 && "Call in progress"}
               {step >= 7 && "Completed"}
             </div>
-            {step >= 1 && step < 7 && (
-              <div className="audio-waves" aria-hidden="true">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} style={{ animationDelay: `${i * 0.15}s` }}></span>
-                ))}
-              </div>
-            )}
+            <div className="audio-waves" aria-hidden="true" style={{ visibility: step >= 1 && step < 7 ? "visible" : "hidden" }}>
+              {[...Array(5)].map((_, i) => (
+                <span key={i} style={{ animationDelay: `${i * 0.15}s` }}></span>
+              ))}
+            </div>
           </div>
 
           <div className="call-transcript">
