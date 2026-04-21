@@ -725,7 +725,7 @@ export default function Demo() {
         .step-item.active .step-num { background: var(--amber); color: var(--ink); }
         .step-label { font-size: 14px; line-height: 1.35; }
 
-        .status-box { background: var(--ink); color: var(--bone); padding: 16px 18px; border-radius: 4px; }
+        .status-box { background: var(--ink); color: var(--bone); padding: 16px 18px; border-radius: 4px; min-height: 110px; }
         .status-label { font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
         .status-value { font-size: 14px; line-height: 1.45; min-height: 1.45em; }
         .meta-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
