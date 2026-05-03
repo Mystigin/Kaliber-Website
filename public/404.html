@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kaliber Autonomy</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <meta http-equiv="refresh" content="0; url=/" />
+    <script>
+      (function () {
+        var path = window.location.pathname.replace(/^\//, "");
+        var target = "/";
+        if (path && path !== "index.html") {
+          target = "/#/" + path.replace(/\.html$/, "");
+        }
+        window.location.replace(target);
+      })();
+    </script>
+  </head>
+  <body>
+    <p>Redirecting… <a href="/">go to homepage</a>.</p>
+  </body>
+</html>

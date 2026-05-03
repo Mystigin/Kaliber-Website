@@ -140,7 +140,8 @@ export default function Register() {
       <meta property="og:description" content="Two minutes. No pitch deck. Tell us about your business. A founder reviews every submission personally." />
       <meta property="og:type" content="website" />
       <meta name="twitter:card" content="summary_large_image" />
-      <link rel="canonical" href="https://kaliberautonomy.com/register.html" />
+      <meta name="robots" content="noindex, follow" />
+      <link rel="canonical" href="https://kaliberautonomy.com/" />
       <meta name="theme-color" content="#0E0E0C" />
 
       <a href="#main" className="skip-link">Skip to content</a>
